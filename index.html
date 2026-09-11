@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NULL//NET v2 — Onion Directory</title>
+
+<style>
+/* =========================================================
+   NULL//NET v2
+   Dark Onion Directory
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #020403;
+    --panel: #050a07;
+    --panel2: #08100b;
+
+    --green: #00ff66;
+    --green2: #00c94f;
+    --green3: #54ff98;
+
+    --text: #b9ffd0;
+    --muted: #587061;
+    --dim: #27372d;
+
+    --red: #ff3158;
+    --yellow: #d8ff4f;
+
+    --border: rgba(0,255,102,.18);
+    --border2: rgba(0,255,102,.35);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(0,255,100,.13),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            rgba(0,255,100,.025) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(0,255,100,.025) 1px,
+            transparent 1px
+        ),
+
+        #020403;
+
+    background-size:
+        auto,
+        40px 40px,
+        40px 40px;
+
+    color: var(--text);
+
+    font-family:
+        "Courier New",
+        Courier,
+        monospace;
+
+    overflow-x: hidden;
+}
+
+/* CRT scanlines */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            transparent 0px,
+            transparent 3px,
+            rgba(0,255,100,.025) 4px
+        );
+}
+
+/* Noise */
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9998;
+
+    opacity: .025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    height: 72px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 500;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 6%;
+
+    background:
+        rgba(1,4,2,.9);
+
+    backdrop-filter: blur(12px);
+
+    border-bottom:
+        1px solid var(--border2);
+}
+
+.logo {
+    color: var(--green);
+
+    font-size: 21px;
+
+    font-weight: bold;
+
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 8px rgba(0,255,100,.8),
+        0 0 25px rgba(0,255,100,.25);
+}
+
+.logo small {
+    color: var(--muted);
+
+    font-size: 9px;
+
+    margin-left: 8px;
+
+    letter-spacing: 1px;
+}
+
+nav {
+    display: flex;
+
+    gap: 28px;
+}
+
+nav a {
+    color: var(--muted);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    transition: .2s;
+}
+
+nav a:hover {
+    color: var(--green);
+
+    text-shadow:
+        0 0 10px var(--green);
+}
+
+.network-status {
+    color: var(--green3);
+
+    font-size: 10px;
+}
+
+.network-status::before {
+    content: "●";
+
+    color: var(--green);
+
+    margin-right: 7px;
+
+    text-shadow:
+        0 0 10px var(--green);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main {
+    width: 88%;
+
+    max-width: 1250px;
+
+    margin: auto;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    min-height: 620px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding: 80px 0 60px;
+}
+
+.classified {
+    width: fit-content;
+
+    color: var(--red);
+
+    border:
+        1px solid rgba(255,49,88,.45);
+
+    padding: 7px 12px;
+
+    margin-bottom: 25px;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+}
+
+.hero h1 {
+    color: white;
+
+    font-size:
+        clamp(48px, 9vw, 105px);
+
+    line-height: .88;
+
+    letter-spacing: -6px;
+
+    text-shadow:
+        3px 0 var(--green2),
+        -2px 0 rgba(255,0,80,.35);
+}
+
+.hero h1 span {
+    color: var(--green);
+
+    text-shadow:
+        0 0 20px rgba(0,255,100,.5);
+}
+
+.hero-sub {
+    max-width: 720px;
+
+    margin-top: 30px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+
+    line-height: 1.9;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-container {
+    max-width: 900px;
+
+    margin-top: 38px;
+}
+
+.search-label {
+    color: var(--green);
+
+    font-size: 10px;
+
+    margin-bottom: 10px;
+
+    letter-spacing: 1px;
+}
+
+.search-box {
+    height: 60px;
+
+    display: flex;
+
+    border:
+        1px solid var(--border2);
+
+    background:
+        rgba(0,10,5,.9);
+
+    box-shadow:
+        0 0 30px rgba(0,255,100,.04);
+
+    transition: .2s;
+}
+
+.search-box:focus-within {
+    border-color: var(--green);
+
+    box-shadow:
+        0 0 35px rgba(0,255,100,.12);
+}
+
+.search-prefix {
+    display: flex;
+
+    align-items: center;
+
+    padding-left: 18px;
+
+    color: var(--green);
+
+    font-size: 18px;
+}
+
+#searchInput {
+    flex: 1;
+
+    min-width: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #d7ffe2;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    padding: 0 15px;
+}
+
+#searchInput::placeholder {
+    color: #3c5143;
+}
+
+.search-button {
+    width: 135px;
+
+    border: none;
+
+    border-left:
+        1px solid var(--border);
+
+    background:
+        rgba(0,255,100,.05);
+
+    color: var(--green);
+
+    font-family: inherit;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.search-button:hover {
+    background: var(--green);
+
+    color: #001b09;
+
+    box-shadow:
+        0 0 25px rgba(0,255,100,.3);
+}
+
+.search-help {
+    margin-top: 9px;
+
+    color: #3c5143;
+
+    font-size: 9px;
+}
+
+/* =========================================================
+   TERMINAL
+========================================================= */
+
+.terminal {
+    max-width: 900px;
+
+    margin-top: 25px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(2,7,4,.9);
+}
+
+.terminal-header {
+    padding: 9px 13px;
+
+    border-bottom:
+        1px solid var(--border);
+
+    color: #455b4b;
+
+    font-size: 9px;
+}
+
+.terminal-body {
+    min-height: 95px;
+
+    padding: 15px;
+
+    color: #67806f;
+
+    font-size: 11px;
+
+    line-height: 1.9;
+}
+
+.prompt {
+    color: var(--green);
+}
+
+.cursor {
+    display: inline-block;
+
+    width: 7px;
+
+    height: 13px;
+
+    background: var(--green);
+
+    vertical-align: middle;
+
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* =========================================================
+   DIRECTORY
+========================================================= */
+
+.directory {
+    padding: 60px 0 100px;
+}
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom:
+        1px solid var(--border);
+
+    padding-bottom: 15px;
+
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    color: white;
+
+    font-size: 17px;
+}
+
+.section-header span {
+    color: var(--green);
+
+    font-size: 9px;
+}
+
+/* filters */
+
+.filters {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 25px;
+}
+
+.filter {
+    color: #55705e;
+
+    background: transparent;
+
+    border:
+        1px solid var(--border);
+
+    padding: 8px 13px;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.filter:hover,
+.filter.active {
+    color: var(--green);
+
+    border-color: var(--green2);
+
+    background:
+        rgba(0,255,100,.05);
+}
+
+/* cards */
+
+.results {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 15px;
+}
+
+.site-card {
+    position: relative;
+
+    padding: 23px;
+
+    min-height: 220px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(7,18,11,.96),
+            rgba(2,5,3,.96)
+        );
+
+    border:
+        1px solid var(--border);
+
+    transition: .25s;
+}
+
+.site-card:hover {
+    border-color:
+        rgba(0,255,100,.55);
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 15px 45px rgba(0,255,100,.06);
+}
+
+.site-top {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.site-id {
+    color: #415747;
+
+    font-size: 9px;
+}
+
+.online {
+    color: var(--green);
+
+    font-size: 8px;
+}
+
+.online::before {
+    content: "●";
+
+    margin-right: 5px;
+}
+
+.site-card h3 {
+    margin-top: 25px;
+
+    color: var(--green);
+
+    font-size: 16px;
+}
+
+.category {
+    display: inline-block;
+
+    margin-top: 9px;
+
+    color: #607d69;
+
+    border:
+        1px solid var(--border);
+
+    padding: 4px 7px;
+
+    font-size: 8px;
+}
+
+.site-description {
+    margin-top: 15px;
+
+    color: #607366;
+
+    font-size: 11px;
+
+    line-height: 1.8;
+}
+
+.onion-address {
+    margin-top: 15px;
+
+    padding: 9px;
+
+    color: #789682;
+
+    background:
+        #020604;
+
+    border:
+        1px solid rgba(0,255,100,.1);
+
+    font-size: 9px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.card-actions {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 15px;
+}
+
+.connect {
+    padding: 8px 12px;
+
+    color: var(--green);
+
+    border:
+        1px solid var(--green2);
+
+    background:
+        rgba(0,255,100,.04);
+
+    text-decoration: none;
+
+    font-size: 9px;
+
+    transition: .2s;
+}
+
+.connect:hover {
+    background: var(--green);
+
+    color: #001b09;
+}
+
+.copy {
+    padding: 8px 12px;
+
+    color: #627c6b;
+
+    border:
+        1px solid var(--border);
+
+    background: transparent;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+.copy:hover {
+    color: white;
+
+    border-color: var(--border2);
+}
+
+/* =========================================================
+   NO RESULTS
+========================================================= */
+
+.no-results {
+    display: none;
+
+    padding: 50px;
+
+    text-align: center;
+
+    border:
+        1px dashed var(--border);
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+/* =========================================================
+   SYSTEM PANEL
+========================================================= */
+
+.system {
+    padding-bottom: 100px;
+}
+
+.system-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+.system-card {
+    padding: 18px;
+
+    border:
+        1px solid var(--border);
+
+    background:
+        rgba(3,9,5,.8);
+}
+
+.system-name {
+    color: #496052;
+
+    font-size: 9px;
+}
+
+.system-value {
+    margin-top: 12px;
+
+    color: var(--green);
+
+    font-size: 15px;
+}
+
+.progress {
+    height: 3px;
+
+    margin-top: 12px;
+
+    background: #132219;
+}
+
+.progress span {
+    display: block;
+
+    height: 100%;
+
+    background: var(--green);
+
+    box-shadow:
+        0 0 8px var(--green);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+
+    inset: 0;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    z-index: 2000;
+
+    background:
+        rgba(0,0,0,.8);
+
+    backdrop-filter: blur(5px);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-box {
+    width: 90%;
+
+    max-width: 600px;
+
+    padding: 25px;
+
+    border:
+        1px solid var(--green2);
+
+    background:
+        #030805;
+
+    box-shadow:
+        0 0 50px rgba(0,255,100,.12);
+}
+
+.modal-title {
+    color: var(--green);
+
+    font-size: 12px;
+
+    margin-bottom: 18px;
+}
+
+.modal-text {
+    color: #708878;
+
+    font-size: 11px;
+
+    line-height: 1.9;
+}
+
+.modal-url {
+    margin-top: 15px;
+
+    padding: 12px;
+
+    color: var(--green3);
+
+    background: #010301;
+
+    border:
+        1px solid var(--border);
+
+    font-size: 10px;
+
+    word-break: break-all;
+}
+
+.modal-buttons {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 20px;
+}
+
+.modal-buttons button {
+    padding: 10px 15px;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+.confirm {
+    color: #001b09;
+
+    background: var(--green);
+
+    border: none;
+}
+
+.cancel {
+    color: var(--muted);
+
+    background: transparent;
+
+    border:
+        1px solid var(--border);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    padding: 25px 6%;
+
+    border-top:
+        1px solid var(--border);
+
+    color: #34463a;
+
+    font-size: 8px;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 850px) {
+
+    nav {
+        display: none;
+    }
+
+    .results {
+        grid-template-columns: 1fr;
+    }
+
+    .system-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .hero h1 {
+        letter-spacing: -4px;
+    }
+}
+
+@media(max-width: 550px) {
+
+    .network-status {
+        display: none;
+    }
+
+    main {
+        width: 90%;
+    }
+
+    .hero {
+        padding-top: 60px;
+    }
+
+    .search-box {
+        height: 52px;
+    }
+
+    .search-button {
+        width: 95px;
+    }
+
+    .system-grid {
+        grid-template-columns: 1fr;
+    }
+
+    footer {
+        flex-direction: column;
+
+        gap: 8px;
+    }
+}
+</style>
+</head>
+
+
+<body>
+
+<!-- ======================================================
+     HEADER
+====================================================== -->
+
+<header>
+
+    <div class="logo">
+        NULL//NET
+        <small>v2.0</small>
+    </div>
+
+    <nav>
+        <a href="#directory">DIRECTORY</a>
+        <a href="#system">SYSTEM</a>
+        <a href="#about">ABOUT</a>
+    </nav>
+
+    <div class="network-status">
+        ONION NETWORK READY
+    </div>
+
+</header>
+
+
+<main>
+
+<!-- ======================================================
+     HERO
+====================================================== -->
+
+<section class="hero">
+
+    <div class="classified">
+        [ PRIVATE NETWORK // DIRECTORY ACCESS ]
+    </div>
+
+    <h1>
+        THE<br>
+        <span>NULL</span>.
+    </h1>
+
+    <p class="hero-sub">
+        A fictional privacy-focused directory for discovering
+        registered Onion services. Search the local index,
+        inspect nodes and connect through a compatible Tor browser.
+    </p>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-container">
+
+        <div class="search-label">
+            // QUERY ONION DIRECTORY
+        </div>
+
+        <div class="search-box">
+
+            <div class="search-prefix">
+                &gt;_
+            </div>
+
+            <input
+                id="searchInput"
+                type="text"
+                autocomplete="off"
+                placeholder="search node, category or .onion address..."
+            >
+
+            <button
+                class="search-button"
+                onclick="performSearch()"
+            >
+                SEARCH
+            </button>
+
+        </div>
+
+        <div class="search-help">
+            [ ENTER = SEARCH ] &nbsp;
+            [ CATEGORY = FILTER ] &nbsp;
+            [ .ONION = NODE ]
+        </div>
+
+    </div>
+
+
+    <!-- TERMINAL -->
+
+    <div class="terminal">
+
+        <div class="terminal-header">
+            NULL//NET SHELL — SESSION 7F3A
+        </div>
+
+        <div
+            class="terminal-body"
+            id="terminalOutput"
+        >
+            <div>
+                <span class="prompt">
+                    root@nullnet:~$
+                </span>
+                initializing directory...
+            </div>
+
+            <div>
+                <span class="prompt">
+                    root@nullnet:~$
+                </span>
+                loading local node index...
+            </div>
+
+            <div>
+                <span class="prompt">
+                    root@nullnet:~$
+                </span>
+                directory ready.
+            </div>
+
+            <div>
+                <span class="prompt">
+                    root@nullnet:~$
+                </span>
+                _
+                <span class="cursor"></span>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     DIRECTORY
+====================================================== -->
+
+<section
+    class="directory"
+    id="directory"
+>
+
+    <div class="section-header">
+
+        <h2>
+            // ONION DIRECTORY
+        </h2>
+
+        <span id="resultCount">
+            06 NODES INDEXED
+        </span>
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <button
+            class="filter active"
+            data-category="ALL"
+        >
+            ALL
+        </button>
+
+        <button
+            class="filter"
+            data-category="ARCHIVE"
+        >
+            ARCHIVE
+        </button>
+
+        <button
+            class="filter"
+            data-category="WIKI"
+        >
+            WIKI
+        </button>
+
+        <button
+            class="filter"
+            data-category="TOOLS"
+        >
+            TOOLS
+        </button>
+
+        <button
+            class="filter"
+            data-category="FORUM"
+        >
+            FORUM
+        </button>
+
+        <button
+            class="filter"
+            data-category="OTHER"
+        >
+            OTHER
+        </button>
+
+    </div>
+
+
+    <!-- RESULTS -->
+
+    <div
+        class="results"
+        id="results"
+    ></div>
+
+
+    <div
+        class="no-results"
+        id="noResults"
+    >
+        [ NO MATCHING NODES FOUND ]
+        <br><br>
+        Try another query.
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     SYSTEM
+====================================================== -->
+
+<section
+    class="system"
+    id="system"
+>
+
+    <div class="section-header">
+
+        <h2>
+            // NETWORK STATUS
+        </h2>
+
+        <span>
+            LOCAL MONITOR
+        </span>
+
+    </div>
+
+
+    <div class="system-grid">
+
+        <div class="system-card">
+
+            <div class="system-name">
+                DIRECTORY
+            </div>
+
+            <div class="system-value">
+                ONLINE
+            </div>
+
+            <div class="progress">
+                <span style="width:100%"></span>
+            </div>
+
+        </div>
+
+
+        <div class="system-card">
+
+            <div class="system-name">
+                INDEX
+            </div>
+
+            <div class="system-value">
+                100%
+            </div>
+
+            <div class="progress">
+                <span style="width:100%"></span>
+            </div>
+
+        </div>
+
+
+        <div class="system-card">
+
+            <div class="system-name">
+                NODES
+            </div>
+
+            <div
+                class="system-value"
+                id="nodeStatus"
+            >
+                06
+            </div>
+
+            <div class="progress">
+                <span style="width:72%"></span>
+            </div>
+
+        </div>
+
+
+        <div class="system-card">
+
+            <div class="system-name">
+                CLOCK
+            </div>
+
+            <div
+                class="system-value"
+                id="clock"
+            >
+                --:--:--
+            </div>
+
+            <div class="progress">
+                <span style="width:88%"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<!-- ======================================================
+     MODAL
+====================================================== -->
+
+<div
+    class="modal"
+    id="connectModal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            // CONNECTION REQUEST
+        </div>
+
+        <div class="modal-text">
+
+            You are about to open an Onion address.
+
+            <br><br>
+
+            This directory does not verify or guarantee
+            the contents of external services.
+
+        </div>
+
+        <div
+            class="modal-url"
+            id="modalURL"
+        ></div>
+
+        <div class="modal-buttons">
+
+            <button
+                class="confirm"
+                id="confirmConnect"
+            >
+                CONNECT
+            </button>
+
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                CANCEL
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+    <span>
+        NULL//NET v2.0 — FICTIONAL DIRECTORY
+    </span>
+
+    <span>
+        NO CENTRAL INDEX // LOCAL DATABASE
+    </span>
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   ONION DIRECTORY DATABASE
+
+   여기에 네가 직접 관리하는 사이트를 추가하면 됩니다.
+========================================================= */
+
+const onionSites = [
+
+    {
+        id: "NODE_001",
+
+        name: "NULL ARCHIVE",
+
+        category: "ARCHIVE",
+
+        description:
+            "A fictional archive for public research documents, historical data and digital fragments.",
+
+        address:
+            "http://exampleonionarchive1234567890.onion",
+
+        status: "ONLINE"
+    },
+
+
+    {
+        id: "NODE_002",
+
+        name: "BLACK WIKI",
+
+        category: "WIKI",
+
+        description:
+            "A fictional privacy-focused knowledge base containing technical documentation.",
+
+        address:
+            "http://exampleblackwiki1234567890.onion",
+
+        status: "ONLINE"
+    },
+
+
+    {
+        id: "NODE_003",
+
+        name: "NULL TOOLS",
+
+        category: "TOOLS",
+
+        description:
+            "Collection of fictional browser utilities and developer tools.",
+
+        address:
+            "http://examplenulltools1234567890.onion",
+
+        status: "ONLINE"
+    },
+
+
+    {
+        id: "NODE_004",
+
+        name: "DARK FORUM",
+
+        category: "FORUM",
+
+        description:
+            "A fictional discussion board for technology, privacy and programming.",
+
+        address:
+            "http://exampledarkforum1234567890.onion",
+
+        status: "ONLINE"
+    },
+
+
+    {
+        id: "NODE_005",
+
+        name: "GHOST LIBRARY",
+
+        category: "ARCHIVE",
+
+        description:
+            "Digital library interface for fictional books, documents and research materials.",
+
+        address:
+            "http://exampleghostlibrary1234567890.onion",
+
+        status: "ONLINE"
+    },
+
+
+    {
+        id: "NODE_006",
+
+        name: "UNKNOWN NODE",
+
+        category: "OTHER",
+
+        description:
+            "An unidentified registered node. Destination information is limited.",
+
+        address:
+            "http://exampleunknownnode1234567890.onion",
+
+        status: "ONLINE"
+    }
+
+];
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const results =
+    document.getElementById("results");
+
+const searchInput =
+    document.getElementById("searchInput");
+
+const noResults =
+    document.getElementById("noResults");
+
+const resultCount =
+    document.getElementById("resultCount");
+
+const terminalOutput =
+    document.getElementById("terminalOutput");
+
+const modal =
+    document.getElementById("connectModal");
+
+const modalURL =
+    document.getElementById("modalURL");
+
+const confirmConnect =
+    document.getElementById("confirmConnect");
+
+let selectedURL = "";
+
+let currentCategory = "ALL";
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderSites(list) {
+
+    results.innerHTML = "";
+
+    if (list.length === 0) {
+
+        noResults.style.display = "block";
+
+        resultCount.textContent =
+            "00 NODES FOUND";
+
+        return;
+
+    }
+
+    noResults.style.display = "none";
+
+    resultCount.textContent =
+        String(list.length).padStart(2, "0")
+        + " NODES FOUND";
+
+
+    list.forEach((site) => {
+
+        const card =
+            document.createElement("article");
+
+        card.className = "site-card";
+
+
+        card.innerHTML = `
+
+            <div class="site-top">
+
+                <span class="site-id">
+                    ${site.id}
+                </span>
+
+                <span class="online">
+                    ${site.status}
+                </span>
+
+            </div>
+
+
+            <h3>
+                ${site.name}
+            </h3>
+
+
+            <span class="category">
+                ${site.category}
+            </span>
+
+
+            <p class="site-description">
+                ${site.description}
+            </p>
+
+
+            <div class="onion-address">
+                ${site.address}
+            </div>
+
+
+            <div class="card-actions">
+
+                <button
+                    class="connect"
+                    onclick="requestConnection('${site.address}')"
+                >
+                    [ CONNECT ]
+                </button>
+
+                <button
+                    class="copy"
+                    onclick="copyAddress('${site.address}')"
+                >
+                    COPY
+                </button>
+
+            </div>
+
+        `;
+
+        results.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function performSearch() {
+
+    const query =
+        searchInput.value
+        .trim()
+        .toLowerCase();
+
+
+    let filtered =
+        onionSites.filter(site => {
+
+            const categoryMatch =
+                currentCategory === "ALL"
+                ||
+                site.category === currentCategory;
+
+
+            const searchMatch =
+                !query
+                ||
+                site.name
+                    .toLowerCase()
+                    .includes(query)
+                ||
+                site.category
+                    .toLowerCase()
+                    .includes(query)
+                ||
+                site.description
+                    .toLowerCase()
+                    .includes(query)
+                ||
+                site.address
+                    .toLowerCase()
+                    .includes(query);
+
+
+            return categoryMatch && searchMatch;
+
+        });
+
+
+    renderSites(filtered);
+
+
+    /*
+       터미널에 검색 기록 표시
+    */
+
+    const command =
+        query || "*";
+
+    terminalOutput.innerHTML += `
+
+        <div>
+            <span class="prompt">
+                root@nullnet:~$
+            </span>
+            search "${command}"
+        </div>
+
+        <div>
+            <span class="prompt">
+                root@nullnet:~$
+            </span>
+            ${filtered.length}
+            result(s) returned.
+        </div>
+
+    `;
+
+    terminalOutput.scrollTop =
+        terminalOutput.scrollHeight;
+
+}
+
+
+/* =========================================================
+   ENTER KEY
+========================================================= */
+
+searchInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+
+            performSearch();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   CATEGORY FILTER
+========================================================= */
+
+document
+.querySelectorAll(".filter")
+.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            document
+            .querySelectorAll(".filter")
+            .forEach(btn =>
+                btn.classList.remove("active")
+            );
+
+
+            this.classList.add("active");
+
+
+            currentCategory =
+                this.dataset.category;
+
+
+            performSearch();
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   CONNECTION MODAL
+========================================================= */
+
+function requestConnection(url) {
+
+    selectedURL = url;
+
+    modalURL.textContent = url;
+
+    modal.classList.add("show");
+
+}
+
+
+function closeModal() {
+
+    modal.classList.remove("show");
+
+}
+
+
+confirmConnect.addEventListener(
+    "click",
+    function() {
+
+        /*
+          Tor Browser에서 열 수 있는 Onion 주소.
+          일반 브라우저에서는 연결되지 않을 수 있습니다.
+        */
+
+        window.location.href =
+            selectedURL;
+
+    }
+);
+
+
+/* =========================================================
+   COPY ADDRESS
+========================================================= */
+
+function copyAddress(address) {
+
+    navigator.clipboard
+        .writeText(address)
+        .then(() => {
+
+            showTerminalMessage(
+                "address copied to clipboard."
+            );
+
+        })
+        .catch(() => {
+
+            showTerminalMessage(
+                "clipboard access denied."
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   TERMINAL MESSAGE
+========================================================= */
+
+function showTerminalMessage(message) {
+
+    terminalOutput.innerHTML += `
+
+        <div>
+            <span class="prompt">
+                root@nullnet:~$
+            </span>
+            ${message}
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   CLOCK
+========================================================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+    const time =
+        now.toLocaleTimeString(
+            "ko-KR",
+            {
+                hour12: false
+            }
+        );
+
+    document
+        .getElementById("clock")
+        .textContent = time;
+
+}
+
+setInterval(
+    updateClock,
+    1000
+);
+
+updateClock();
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+renderSites(onionSites);
+
+
+/* =========================================================
+   ESC = CLOSE MODAL
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Escape") {
+
+            closeModal();
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>
